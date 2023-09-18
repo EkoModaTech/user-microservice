@@ -1,0 +1,17 @@
+keycloak-config:
+  initializeOnStartup: false
+  masterRealm: master
+  applicationRealm: test
+  client-id: admin-cli
+  username: admin
+  password: admin
+  url: http://keycloak:8080/
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka
+
+spring:
+  application:
+    name: user-microservice

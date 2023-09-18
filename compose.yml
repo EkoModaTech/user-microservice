@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  users:
+    build: .
+    container_name: user-microservice
+    hostname: user-microservice
+    ports:
+      - "8585:8080"
+    networks:
+      - core
+
+networks:
+  core:
+    driver: bridge
+    external: true
