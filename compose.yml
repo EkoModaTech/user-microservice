@@ -4,12 +4,21 @@ services:
     build: .
     container_name: user-microservice
     hostname: user-microservice
-    ports:
-      - "8585:8080"
     networks:
       - core
 
+#QA
+  users_qa:
+    build: .
+    container_name: user-microservice_qa
+    hostname: user-microservice
+    networks:
+      - core_qa
+
 networks:
   core:
+    driver: bridge
+    external: true
+  core_qa:
     driver: bridge
     external: true
