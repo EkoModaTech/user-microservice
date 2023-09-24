@@ -4,7 +4,9 @@ import com.ekomodatech.festivanow.users.entity.User;
 import com.ekomodatech.festivanow.users.service.UserService;
 import jakarta.ws.rs.QueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 
 @RestController
 @RequestMapping("/")
@@ -12,9 +14,19 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+
+    @Autowired
+    private DiscoveryClient discoveryClient;
+
     @GetMapping("/test")
-    public String test(){
-        return "Hello World !";
+    public ServiceInstance test(){
+        return discoveryClient.getInstances("api-gateway").get(0);
+    }
+
+    @GetMapping("/test2")
+    public ServiceInstance test2(){
+        return discoveryClient.getInstances("user-microservice").get(0);
     }
 
     @PostMapping

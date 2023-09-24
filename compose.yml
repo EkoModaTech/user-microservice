@@ -6,6 +6,12 @@ services:
     hostname: user-microservice
     networks:
       - core
+    ports:
+      - "4444:8080"
+    environment:
+      IP_HOST: ${IP_HOST}
+      PORT_HOST: ${PORT_HOST}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
 
 #QA
   users_qa:
@@ -14,6 +20,12 @@ services:
     hostname: user-microservice
     networks:
       - core_qa
+    ports:
+      - "24444:8080"
+    environment:
+      IP_HOST: ${IP_HOST}
+      PORT_HOST: ${PORT_HOST_QA}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
 
 networks:
   core:
