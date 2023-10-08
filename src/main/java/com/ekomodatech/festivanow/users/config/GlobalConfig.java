@@ -11,4 +11,6 @@ public class GlobalConfig {
     public RestTemplate restTemplate(){
         return new RestTemplate();
     }
+
+
 }

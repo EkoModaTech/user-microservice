@@ -1,11 +1,8 @@
 keycloak-config:
-  initializeOnStartup: false
-  masterRealm: master
-  applicationRealm: test
-  client-id: admin-cli
-  username: admin
-  password: ${KEYCLOAK_PASSWORD}
-  url: http://keycloak:8080/
+  clientId: ${CLIENT_ID}
+  clientSecret: ${CLIENT_SECRET}
+  url: ${KEYCLOAK_URL}
+  realm: ${KEYCLOAK_REALM}
 
 eureka:
   client:
@@ -30,9 +27,14 @@ spring:
   application:
     name: user-microservice
 
-
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+
+oidc:
+  client_id: ${CLIENT_ID}
+  client_secret: ${CLIENT_SECRET}
+  token_url: ${TOKEN_URL}
+  logout_url: ${LOGOUT_URL}

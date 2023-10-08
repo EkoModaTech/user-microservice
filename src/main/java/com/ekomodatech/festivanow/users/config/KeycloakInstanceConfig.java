@@ -15,11 +15,10 @@ public class KeycloakInstanceConfig {
     @Bean
     public Keycloak keycloak() {
         return KeycloakBuilder.builder()
-                .grantType(OAuth2Constants.PASSWORD)
-                .realm(keycloakInitializerConfigurationProperties.getMasterRealm())
+                .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
+                .realm(keycloakInitializerConfigurationProperties.getRealm())
                 .clientId(keycloakInitializerConfigurationProperties.getClientId())
-                .username(keycloakInitializerConfigurationProperties.getUsername())
-                .password(keycloakInitializerConfigurationProperties.getPassword())
+                .clientSecret(keycloakInitializerConfigurationProperties.getClientSecret())
                 .serverUrl(keycloakInitializerConfigurationProperties.getUrl())
                 .build();
     }
