@@ -14,12 +14,12 @@ services:
       KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
 
 #QA
-  users_qa:
+  users-qa:
     build: .
     container_name: user-microservice_qa
     hostname: user-microservice
     networks:
-      - core_qa
+      - core-qa
     ports:
       - "24444:8080"
     environment:
@@ -31,6 +31,6 @@ networks:
   core:
     driver: bridge
     external: true
-  core_qa:
+  core-qa:
     driver: bridge
     external: true
