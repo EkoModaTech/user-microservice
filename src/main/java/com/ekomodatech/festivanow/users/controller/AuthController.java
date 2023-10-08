@@ -27,6 +27,6 @@ public class AuthController {
 
     @PostMapping("/logout")
     public Map<String, String> logout(@RequestBody RefreshTokenRequest userLogout, @RequestHeader("Authorization") String token){
-        return oidcService.logout(userLogout, token);
+        return oidcService.logout(userLogout);
     }
 }
