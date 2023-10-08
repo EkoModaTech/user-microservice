@@ -6,6 +6,7 @@ import com.ekomodatech.festivanow.users.service.OIDCService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.ws.rs.HeaderParam;
 import java.util.Map;
 
 @RestController
@@ -21,7 +22,7 @@ public class AuthController {
 
 
     @PostMapping("/logout")
-    public Map logout(@RequestBody LogoutRequest userLogout){
-        return loginService.logout(userLogout);
+    public Map logout(@RequestBody LogoutRequest userLogout, @RequestHeader("Authorization") String token){
+        return loginService.logout(userLogout, token);
     }
 }

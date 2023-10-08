@@ -57,16 +57,16 @@ public class OIDCService {
         }
     }
 
-    public Map logout(@NonNull LogoutRequest logoutRequest){
+    public Map logout(@NonNull LogoutRequest logoutRequest, String token){
         val requestParams = new LinkedMultiValueMap<String, String>();
         requestParams.add("client_id", oidcConfig.getClient_id());
         requestParams.add("client_secret", oidcConfig.getClient_secret());
         requestParams.add("refresh_token", logoutRequest.getRefreshToken());
-        requestParams.add("grant_type", "password");
 
 
         val headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.add("Authorization", token);
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(requestParams, headers);
 
