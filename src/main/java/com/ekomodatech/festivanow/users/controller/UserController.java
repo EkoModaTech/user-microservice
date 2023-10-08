@@ -2,7 +2,6 @@ package com.ekomodatech.festivanow.users.controller;
 
 import com.ekomodatech.festivanow.users.entity.User;
 import com.ekomodatech.festivanow.users.service.UserService;
-import jakarta.ws.rs.QueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

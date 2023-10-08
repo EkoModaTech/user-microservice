@@ -1,6 +1,5 @@
 package com.ekomodatech.festivanow.users.config;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
