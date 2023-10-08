@@ -65,6 +65,9 @@ public class OIDCService {
         requestParams.add("refresh_token", logoutRequest.getRefreshToken());
         requestParams.add("grant_request", "client_credentials");
 
+        val headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(requestParams, headers);
 
