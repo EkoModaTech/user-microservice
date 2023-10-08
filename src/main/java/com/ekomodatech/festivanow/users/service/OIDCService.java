@@ -12,6 +12,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -61,7 +62,7 @@ public class OIDCService {
         }
     }
 
-    public Map<String, String> refreshToken(String token) {
+    public Map<String, String> refreshToken(String token)  {
         val requestParams = new LinkedMultiValueMap<String, String>();
         requestParams.add("client_id", oidcConfig.getClient_id());
         requestParams.add("client_secret", oidcConfig.getClient_secret());
@@ -73,22 +74,26 @@ public class OIDCService {
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(requestParams, headers);
 
-        ResponseEntity<Map<String, String>> responseEntity = restTemplate.exchange(
-                oidcConfig.getToken_url(),
-                HttpMethod.POST,
-                entity,
-                KEY_VALUE
-        );
+        try{
+            ResponseEntity<Map<String, String>> responseEntity = restTemplate.exchange(
+                    oidcConfig.getToken_url(),
+                    HttpMethod.POST,
+                    entity,
+                    KEY_VALUE
+            );
 
-        if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            return responseEntity.getBody();
-        } else {
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Unable to refresh token");
+            if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                return responseEntity.getBody();
+            } else {
+                throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Unable to refresh token");
+            }
+        }catch (HttpClientErrorException e){
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
 
     }
 
-    public Map<String, String> logout(@NonNull RefreshTokenRequest logoutRequest, String token){
+    public Map<String, String> logout(@NonNull RefreshTokenRequest logoutRequest){
         val requestParams = new LinkedMultiValueMap<String, String>();
         requestParams.add("client_id", oidcConfig.getClient_id());
         requestParams.add("client_secret", oidcConfig.getClient_secret());
@@ -101,17 +106,21 @@ public class OIDCService {
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(requestParams, headers);
 
-        ResponseEntity<Map<String, String>> responseEntity = restTemplate.exchange(
-                oidcConfig.getLogout_url(),
-                HttpMethod.POST,
-                entity,
-                KEY_VALUE
-        );
+        try{
+            ResponseEntity<Map<String, String>> responseEntity = restTemplate.exchange(
+                    oidcConfig.getLogout_url(),
+                    HttpMethod.POST,
+                    entity,
+                    KEY_VALUE
+            );
 
-        if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            return responseEntity.getBody();
-        } else {
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Request to authorization server");
+            if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                return responseEntity.getBody();
+            } else {
+                throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Request to authorization server");
+            }
+        }catch (HttpClientErrorException e){
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
 }
