@@ -1,2 +1,10 @@
-package com.ekomodatech.festivanow.users.entity;public class UserLogin {
+package com.ekomodatech.festivanow.users.entity;
+
+
+import lombok.Data;
+
+@Data
+public class UserLogin {
+    private String username;
+    private String password;
 }

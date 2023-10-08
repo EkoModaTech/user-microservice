@@ -30,6 +30,7 @@ spring:
   application:
     name: user-microservice
 
+
 management:
   endpoints:
     web:
