@@ -32,8 +32,8 @@ public class OIDCService {
         val data = new LinkedMultiValueMap<String, String>();
 
         data.add("grant_type", "password");
-        data.add("client_id", "apisix");
-        data.add("client_secret", "KhD0TYWUQ7fuwhHA2iDw1Fcuzr2RpbZE");
+        data.add("client_id", oidcConfig.getClient_id());
+        data.add("client_secret", oidcConfig.getClient_secret());
         data.add("username", userLogin.getUsername());
         data.add("password", userLogin.getPassword());
 
