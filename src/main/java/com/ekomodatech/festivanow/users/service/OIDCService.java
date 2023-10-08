@@ -2,11 +2,12 @@ package com.ekomodatech.festivanow.users.service;
 
 import com.ekomodatech.festivanow.users.config.OIDCConfig;
 import com.ekomodatech.festivanow.users.entity.LoginRequest;
-import com.ekomodatech.festivanow.users.entity.LogoutRequest;
+import com.ekomodatech.festivanow.users.entity.RefreshTokenRequest;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -25,10 +26,12 @@ public class OIDCService {
     @Autowired
     private OIDCConfig oidcConfig;
 
+    private static final ParameterizedTypeReference<Map<String, String>> KEY_VALUE = new ParameterizedTypeReference<>() {
+    };
 
 
 
-    public Map login(@NonNull LoginRequest userLogin){
+    public Map<String, String> login(@NonNull LoginRequest userLogin){
         val data = new LinkedMultiValueMap<String, String>();
 
         data.add("grant_type", "password");
@@ -44,11 +47,11 @@ public class OIDCService {
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(data, headers);
 
 
-        ResponseEntity<Map> responseEntity = restTemplate.exchange(
+        ResponseEntity<Map<String,String>> responseEntity = restTemplate.exchange(
                 oidcConfig.getToken_url(),
                 HttpMethod.POST,
                 entity,
-                Map.class
+                KEY_VALUE
         );
 
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
@@ -58,7 +61,34 @@ public class OIDCService {
         }
     }
 
-    public Map logout(@NonNull LogoutRequest logoutRequest, String token){
+    public Map<String, String> refreshToken(String token) {
+        val requestParams = new LinkedMultiValueMap<String, String>();
+        requestParams.add("client_id", oidcConfig.getClient_id());
+        requestParams.add("client_secret", oidcConfig.getClient_secret());
+        requestParams.add("refresh_token", token);
+        requestParams.add("grant_type", "client_credentials");
+
+        val headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(requestParams, headers);
+
+        ResponseEntity<Map<String, String>> responseEntity = restTemplate.exchange(
+                oidcConfig.getToken_url(),
+                HttpMethod.POST,
+                entity,
+                KEY_VALUE
+        );
+
+        if (responseEntity.getStatusCode().is2xxSuccessful()) {
+            return responseEntity.getBody();
+        } else {
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Unable to refresh token");
+        }
+
+    }
+
+    public Map<String, String> logout(@NonNull RefreshTokenRequest logoutRequest, String token){
         val requestParams = new LinkedMultiValueMap<String, String>();
         requestParams.add("client_id", oidcConfig.getClient_id());
         requestParams.add("client_secret", oidcConfig.getClient_secret());
@@ -71,11 +101,11 @@ public class OIDCService {
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(requestParams, headers);
 
-        ResponseEntity<Map> responseEntity = restTemplate.exchange(
-                oidcConfig.getToken_url(),
+        ResponseEntity<Map<String, String>> responseEntity = restTemplate.exchange(
+                oidcConfig.getLogout_url(),
                 HttpMethod.POST,
                 entity,
-                Map.class
+                KEY_VALUE
         );
 
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
