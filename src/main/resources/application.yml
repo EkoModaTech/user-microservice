@@ -1,16 +1,13 @@
 keycloak-config:
-  initializeOnStartup: false
-  masterRealm: master
-  applicationRealm: test
-  client-id: admin-cli
-  username: admin
-  password: ${KEYCLOAK_PASSWORD}
-  url: http://keycloak:8080/
+  clientId: ${CLIENT_ID}
+  clientSecret: ${CLIENT_SECRET}
+  url: ${KEYCLOAK_URL}
+  realm: ${KEYCLOAK_REALM}
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://eureka-server:8761/eureka
+      defaultZone: http://eureka:8761/eureka
 
   instance:
     metadataMap:
@@ -35,3 +32,9 @@ management:
     web:
       exposure:
         include: "*"
+
+oidc:
+  client_id: ${CLIENT_ID}
+  client_secret: ${CLIENT_SECRET}
+  token_url: ${TOKEN_URL}
+  logout_url: ${LOGOUT_URL}

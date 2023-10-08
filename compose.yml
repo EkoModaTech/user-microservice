@@ -12,25 +12,37 @@ services:
       IP_HOST: ${IP_HOST}
       PORT_HOST: ${PORT_HOST}
       KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+      CLIENT_ID: ${CLIENT_ID}
+      CLIENT_SECRET: ${CLIENT_SECRET}
+      TOKEN_URL: ${TOKEN_URL}
+      LOGOUT_URL: ${LOGOUT_URL}
+      KEYCLOAK_URL: ${KEYCLOAK_URL}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM}
 
 #QA
-  users_qa:
+  users-qa:
     build: .
     container_name: user-microservice_qa
     hostname: user-microservice
     networks:
-      - core_qa
+      - core-qa
     ports:
       - "24444:8080"
     environment:
       IP_HOST: ${IP_HOST}
       PORT_HOST: ${PORT_HOST_QA}
       KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+      CLIENT_ID: ${CLIENT_ID}
+      CLIENT_SECRET: ${CLIENT_SECRET}
+      TOKEN_URL: ${TOKEN_URL}
+      LOGOUT_URL: ${LOGOUT_URL}
+      KEYCLOAK_URL: ${KEYCLOAK_URL}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM}
 
 networks:
   core:
     driver: bridge
     external: true
-  core_qa:
+  core-qa:
     driver: bridge
     external: true
