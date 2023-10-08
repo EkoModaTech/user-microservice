@@ -63,7 +63,7 @@ public class OIDCService {
         requestParams.add("client_id", oidcConfig.getClient_id());
         requestParams.add("client_secret", oidcConfig.getClient_secret());
         requestParams.add("refresh_token", logoutRequest.getRefreshToken());
-        requestParams.add("grant_request", "client_credentials");
+        requestParams.add("grant_type", "client_credentials");
 
         val headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
