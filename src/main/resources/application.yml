@@ -1,0 +1,40 @@
+keycloak-config:
+  clientId: ${CLIENT_ID}
+  clientSecret: ${CLIENT_SECRET}
+  url: ${KEYCLOAK_URL}
+  realm: ${KEYCLOAK_REALM}
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:8761/eureka
+
+  instance:
+    metadataMap:
+      "prometheus.scrape": "true"
+      "prometheus.path": "/actuator/prometheus"
+      "prometheus.port": "9090"
+    metadata-map:
+      metrics.path: /actuator/prometheus
+      health.path: /actuator/health
+      management.context-path: /actuator
+
+    prefer-ip-address: true
+    ip-address: "${IP_HOST}"
+    nonSecurePort: "${PORT_HOST}"
+
+spring:
+  application:
+    name: user-microservice
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+oidc:
+  client_id: ${CLIENT_ID}
+  client_secret: ${CLIENT_SECRET}
+  token_url: ${TOKEN_URL}
+  logout_url: ${LOGOUT_URL}
