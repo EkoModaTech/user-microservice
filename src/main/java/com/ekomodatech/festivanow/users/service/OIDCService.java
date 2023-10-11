@@ -48,18 +48,22 @@ public class OIDCService {
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(data, headers);
 
 
-        ResponseEntity<Map<String,String>> responseEntity = restTemplate.exchange(
-                oidcConfig.getToken_url(),
-                HttpMethod.POST,
-                entity,
-                KEY_VALUE
-        );
+       try{
+           ResponseEntity<Map<String,String>> responseEntity = restTemplate.exchange(
+                   oidcConfig.getToken_url(),
+                   HttpMethod.POST,
+                   entity,
+                   KEY_VALUE
+           );
 
-        if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            return responseEntity.getBody();
-        } else {
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Request to authorization server");
-        }
+           if (responseEntity.getStatusCode().is2xxSuccessful()) {
+               return responseEntity.getBody();
+           } else {
+               throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Request to authorization server");
+           }
+       }catch (HttpClientErrorException e){
+           throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
+       }
     }
 
     public Map<String, String> refreshToken(String token)  {
