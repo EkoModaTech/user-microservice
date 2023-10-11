@@ -9,6 +9,7 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.loadbalancer.CompletionContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -26,12 +27,6 @@ public class UserService {
     private KeycloakConfig keycloakConfig;
 
     public void addUser(@NonNull User user){
-        val repeat = keycloak
-                .realm(keycloakConfig.getRealm()).users()
-                .searchByUsername(user.getUsername(), true);
-        if(repeat.size() > 0){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already exists");
-        }
 
         val credentials = new CredentialRepresentation();
         credentials.setType(CredentialRepresentation.PASSWORD);
@@ -43,8 +38,10 @@ public class UserService {
         userR.setCredentials(List.of(credentials));
         userR.setEnabled(true);
 
-        try(val value = keycloak.realm(keycloakConfig.getRealm()).users().create(userR)){
-            System.out.println(value.getStatusInfo());
+        try(val response = keycloak.realm(keycloakConfig.getRealm()).users().create(userR)){
+            if(response.getStatus() >= 400){
+                throw new ResponseStatusException(HttpStatus.valueOf(response.getStatus()));
+            }
         }catch (Exception e){
             log.error(e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error When creating user");
@@ -53,7 +50,10 @@ public class UserService {
 
 
     public void deleteUser(String username) {
-        try(val ignored = keycloak.realm(keycloakConfig.getRealm()).users().delete(username)){
+        try(val response = keycloak.realm(keycloakConfig.getRealm()).users().delete(username)){
+            if(response.getStatus() >= 400){
+                throw new ResponseStatusException(HttpStatus.valueOf(response.getStatus()));
+            }
         }catch (Exception e){
             log.error(e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error when deleting User");
