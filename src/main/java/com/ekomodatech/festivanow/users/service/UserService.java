@@ -9,6 +9,7 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.loadbalancer.CompletionContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -26,6 +27,7 @@ public class UserService {
     private KeycloakConfig keycloakConfig;
 
     public void addUser(@NonNull User user){
+
         val credentials = new CredentialRepresentation();
         credentials.setType(CredentialRepresentation.PASSWORD);
         credentials.setValue(user.getPassword());
@@ -37,19 +39,20 @@ public class UserService {
         userR.setEnabled(true);
 
         try(val response = keycloak.realm(keycloakConfig.getRealm()).users().create(userR)){
-        }catch (Exception e){
-            log.error(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error When creating user");
+            val status = HttpStatus.valueOf(response.getStatus());
+            if(status.is4xxClientError()){
+                throw new ResponseStatusException(status, status.getReasonPhrase());
+            }
         }
     }
 
 
     public void deleteUser(String username) {
         try(val response = keycloak.realm(keycloakConfig.getRealm()).users().delete(username)){
-            System.out.println(response.getStatusInfo());
-        }catch (Exception e){
-            log.error(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error when deleting User");
+            val status = HttpStatus.valueOf(response.getStatus());
+            if(status.is4xxClientError()){
+                throw new ResponseStatusException(status, status.getReasonPhrase());
+            }
         }
     }
 }
