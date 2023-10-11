@@ -43,7 +43,8 @@ public class UserService {
         userR.setCredentials(List.of(credentials));
         userR.setEnabled(true);
 
-        try(val ignored = keycloak.realm(keycloakConfig.getRealm()).users().create(userR)){
+        try(val value = keycloak.realm(keycloakConfig.getRealm()).users().create(userR)){
+            System.out.println(value.getStatusInfo());
         }catch (Exception e){
             log.error(e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error When creating user");
