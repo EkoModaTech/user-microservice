@@ -39,24 +39,20 @@ public class UserService {
         userR.setEnabled(true);
 
         try(val response = keycloak.realm(keycloakConfig.getRealm()).users().create(userR)){
-            if(response.getStatus() >= 400){
-                throw new ResponseStatusException(HttpStatus.valueOf(response.getStatus()));
+            val status = HttpStatus.valueOf(response.getStatus());
+            if(status.is4xxClientError()){
+                throw new ResponseStatusException(status, status.getReasonPhrase());
             }
-        }catch (Exception e){
-            log.error(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error When creating user");
         }
     }
 
 
     public void deleteUser(String username) {
         try(val response = keycloak.realm(keycloakConfig.getRealm()).users().delete(username)){
-            if(response.getStatus() >= 400){
-                throw new ResponseStatusException(HttpStatus.valueOf(response.getStatus()));
+            val status = HttpStatus.valueOf(response.getStatus());
+            if(status.is4xxClientError()){
+                throw new ResponseStatusException(status, status.getReasonPhrase());
             }
-        }catch (Exception e){
-            log.error(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error when deleting User");
         }
     }
 }
