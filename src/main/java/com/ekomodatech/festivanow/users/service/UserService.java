@@ -26,6 +26,13 @@ public class UserService {
     private KeycloakConfig keycloakConfig;
 
     public void addUser(@NonNull User user){
+        val repeat = keycloak
+                .realm(keycloakConfig.getRealm()).users()
+                .searchByUsername(user.getUsername(), true);
+        if(repeat.size() > 0){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already exists");
+        }
+
         val credentials = new CredentialRepresentation();
         credentials.setType(CredentialRepresentation.PASSWORD);
         credentials.setValue(user.getPassword());
@@ -36,7 +43,7 @@ public class UserService {
         userR.setCredentials(List.of(credentials));
         userR.setEnabled(true);
 
-        try(val response = keycloak.realm(keycloakConfig.getRealm()).users().create(userR)){
+        try(val ignored = keycloak.realm(keycloakConfig.getRealm()).users().create(userR)){
         }catch (Exception e){
             log.error(e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error When creating user");
@@ -45,8 +52,7 @@ public class UserService {
 
 
     public void deleteUser(String username) {
-        try(val response = keycloak.realm(keycloakConfig.getRealm()).users().delete(username)){
-            System.out.println(response.getStatusInfo());
+        try(val ignored = keycloak.realm(keycloakConfig.getRealm()).users().delete(username)){
         }catch (Exception e){
             log.error(e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error when deleting User");
