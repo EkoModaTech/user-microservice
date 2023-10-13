@@ -9,7 +9,6 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.loadbalancer.CompletionContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -38,6 +37,8 @@ public class UserService {
         userR.setCredentials(List.of(credentials));
         userR.setEnabled(true);
 
+        userR.setRealmRoles(List.of("CLIENT"));
+
         try(val response = keycloak.realm(keycloakConfig.getRealm()).users().create(userR)){
             val status = HttpStatus.valueOf(response.getStatus());
             if(status.is4xxClientError()){
@@ -47,7 +48,7 @@ public class UserService {
     }
 
 
-    public void deleteUser(String username) {
+    public void  deleteUser(String username) {
         try(val response = keycloak.realm(keycloakConfig.getRealm()).users().delete(username)){
             val status = HttpStatus.valueOf(response.getStatus());
             if(status.is4xxClientError()){
