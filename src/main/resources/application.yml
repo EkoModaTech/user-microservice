@@ -38,3 +38,5 @@ oidc:
   client_secret: ${CLIENT_SECRET}
   token_url: ${TOKEN_URL}
   logout_url: ${LOGOUT_URL}
+  issuer_url: ${ISSUER_URL}
+

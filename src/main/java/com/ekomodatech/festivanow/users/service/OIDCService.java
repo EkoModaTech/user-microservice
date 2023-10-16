@@ -1,6 +1,6 @@
 package com.ekomodatech.festivanow.users.service;
 
-import com.ekomodatech.festivanow.users.config.OIDCConfig;
+import com.ekomodatech.festivanow.users.config.oidc.OIDCConfig;
 import com.ekomodatech.festivanow.users.entity.LoginRequest;
 import com.ekomodatech.festivanow.users.entity.RefreshTokenRequest;
 import lombok.NonNull;

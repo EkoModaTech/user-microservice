@@ -1,6 +1,6 @@
 package com.ekomodatech.festivanow.users.service;
 
-import com.ekomodatech.festivanow.users.config.KeycloakConfig;
+import com.ekomodatech.festivanow.users.config.keycloak.KeycloakConfig;
 import com.ekomodatech.festivanow.users.entity.User;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +9,6 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.loadbalancer.CompletionContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
