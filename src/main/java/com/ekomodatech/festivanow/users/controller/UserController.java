@@ -6,6 +6,7 @@ import com.ekomodatech.festivanow.users.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
@@ -28,10 +29,8 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<Map<String, String>> updatePassword(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody UpdatePasswordRequest request){
-        var j = jwt.getClaims();
-        System.out.println(j);
-        //userService.updatePassword(request);
+    public ResponseEntity<Map<String, String>> updatePassword(@AuthenticationPrincipal @NonNull Jwt jwt, @Valid @RequestBody UpdatePasswordRequest request){
+        userService.updatePassword(jwt ,request);
         return ResponseEntity.ok(Map.of("Message", "Updated Password"));
     }
 
