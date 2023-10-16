@@ -40,3 +40,16 @@ oidc:
   logout_url: ${LOGOUT_URL}
   issuer_url: ${ISSUER_URL}
 
+com:
+  c4-soft:
+    springaddons:
+      oidc:
+        ops:
+          - iss: ${ISSUER_URL}
+            username-claim: preferred_username
+            authorities:
+              - path: $.realm_access.roles
+              - path: $.resource_access.*.roles
+        resourceserver:
+          permit-all:
+            - "/**"
