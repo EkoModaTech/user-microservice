@@ -1,4 +1,4 @@
-package com.ekomodatech.festivanow.users.config;
+package com.ekomodatech.festivanow.users.config.keycloak;
 
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;

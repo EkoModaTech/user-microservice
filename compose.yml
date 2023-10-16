@@ -38,6 +38,7 @@ services:
       LOGOUT_URL: ${LOGOUT_URL}
       KEYCLOAK_URL: ${KEYCLOAK_URL}
       KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      ISSUER_URL: ${ISSUER_URL}
 
 networks:
   core:

@@ -1,4 +1,4 @@
-package com.ekomodatech.festivanow.users.config;
+package com.ekomodatech.festivanow.users.config.oidc;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,4 +14,5 @@ public class OIDCConfig {
     private String client_secret;
     private String token_url;
     private String logout_url;
+    private String issuer_url;
 }
