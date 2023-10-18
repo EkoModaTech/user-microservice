@@ -3,6 +3,7 @@ package com.ekomodatech.festivanow.users.service;
 import com.ekomodatech.festivanow.users.config.keycloak.KeycloakConfig;
 import com.ekomodatech.festivanow.users.entity.UpdatePasswordRequest;
 import com.ekomodatech.festivanow.users.entity.User;
+import com.ekomodatech.festivanow.users.entity.UserRoles;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -38,6 +39,7 @@ public class UserService {
         userR.setEmail(user.getEmail());
         userR.setCredentials(List.of(credentials));
         userR.setEnabled(true);
+        userR.setRealmRoles(List.of(UserRoles.CLIENT.name()));
 
         try(val response = keycloak.realm(keycloakConfig.getRealm()).users().create(userR)){
             val status = HttpStatus.valueOf(response.getStatus());
