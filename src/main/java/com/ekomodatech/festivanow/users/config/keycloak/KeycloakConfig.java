@@ -1,4 +1,4 @@
-package com.ekomodatech.festivanow.users.config;
+package com.ekomodatech.festivanow.users.config.keycloak;
 
 import lombok.Getter;
 import lombok.Setter;
