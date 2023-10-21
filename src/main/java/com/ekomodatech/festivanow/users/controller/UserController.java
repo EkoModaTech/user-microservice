@@ -23,7 +23,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public ResponseEntity<String> addUser(@Valid @RequestBody User user){
+    @ResponseBody public ResponseEntity<String> addUser(@Valid @RequestBody User user){
         userService.addUser(user);
         return ResponseEntity.ok("User created");
     }
