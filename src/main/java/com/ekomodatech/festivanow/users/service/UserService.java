@@ -7,6 +7,7 @@ import com.ekomodatech.festivanow.users.entity.UserRoles;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -39,13 +40,14 @@ public class UserService {
         userR.setEmail(user.getEmail());
         userR.setCredentials(List.of(credentials));
         userR.setEnabled(true);
-        userR.setRealmRoles(List.of(UserRoles.CLIENT.name()));
+        //userR.setRealmRoles(List.of(UserRoles.CLIENT.name()));
 
         try(val response = keycloak.realm(keycloakConfig.getRealm()).users().create(userR)){
             val status = HttpStatus.valueOf(response.getStatus());
             if(status.is4xxClientError()){
                 throw new ResponseStatusException(status, status.getReasonPhrase());
             }
+            this.addRoleToUser(CreatedResponseUtil.getCreatedId(response), UserRoles.CLIENT);
         }
     }
 
@@ -75,5 +77,13 @@ public class UserService {
 
 
         keycloak.realm(keycloakConfig.getRealm()).users().get(id).resetPassword(credentials);
+    }
+
+
+    protected void addRoleToUser(@NonNull String userId,@NonNull UserRoles role){
+        val realm = keycloak.realm(keycloakConfig.getRealm());
+        val realmRole = realm.roles().get(role.name()).toRepresentation();
+        val user = realm.users().get(userId);
+        user.roles().realmLevel().add(List.of(realmRole));
     }
 }
