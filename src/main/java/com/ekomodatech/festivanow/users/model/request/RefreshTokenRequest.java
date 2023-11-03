@@ -1,4 +1,4 @@
-package com.ekomodatech.festivanow.users.entity;
+package com.ekomodatech.festivanow.users.model.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
