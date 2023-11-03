@@ -1,6 +1,7 @@
 package com.ekomodatech.festivanow.users.model.request;
 
 import com.ekomodatech.festivanow.users.model.entity.UserRoles;
+import com.ekomodatech.festivanow.users.validators.EnumValue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -11,7 +12,6 @@ public class UpdateRoleRequest {
     @NotNull
     private String username;
 
-    @NotBlank
-    @NotNull
+    @EnumValue(enumClass = UserRoles.class)
     private UserRoles role;
 }
