@@ -25,7 +25,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public Iterable<UserDTO> getAll(){
         return userService.getAllUsers();
     }
