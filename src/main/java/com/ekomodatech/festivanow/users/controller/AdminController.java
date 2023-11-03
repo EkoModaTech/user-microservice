@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/admin")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyAuthority('ADMIN')")
 @Validated
 public class AdminController {
 
