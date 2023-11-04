@@ -1,16 +1,21 @@
 package com.ekomodatech.festivanow.users.service;
 
 import com.ekomodatech.festivanow.users.config.keycloak.KeycloakConfig;
+import com.ekomodatech.festivanow.users.model.dto.UserDTO;
 import com.ekomodatech.festivanow.users.model.entity.UserRoles;
 import com.ekomodatech.festivanow.users.model.request.UpdateRoleRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.val;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.UserResource;
+import org.keycloak.representations.idm.RoleRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AdminService {
@@ -24,9 +29,10 @@ public class AdminService {
     @Autowired
     private UserService userService;
 
-    private static final List<String> USER_ROLES = Arrays.stream(UserRoles.values())
-            .map(Enum::name)
-            .toList();
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    private List<RoleRepresentation> USER_ROLES ;
 
 
 
@@ -35,15 +41,24 @@ public class AdminService {
         changeUserRole(user, roleRequest.getRole());
     }
 
-    protected void changeUserRole(UserResource user, UserRoles role){
-        val userR = user.toRepresentation();
-        val realmRoles = userR.getRealmRoles();
+    protected void changeUserRole(UserResource user, UserRoles role) {
+        user.roles().realmLevel().remove(USER_ROLES);
+        user.roles().realmLevel().add(List.of(keycloak.realm(keycloakConfig.getRealm())
+                .roles().get(role.name()).toRepresentation()));
+    }
 
-        if (realmRoles != null) {
-            realmRoles.removeIf(AdminService.USER_ROLES::contains);
-            realmRoles.add(role.name());
-            userR.setRealmRoles(realmRoles);
-        }
-        user.update(userR);
+    public Iterable<UserDTO> getAllUsers() {
+        val users = keycloak.realm(keycloakConfig.getRealm()).users().list();
+        return users.stream()
+                .map(userR -> objectMapper.convertValue(userR, UserDTO.class))
+                .collect(Collectors.toSet());
+    }
+
+
+    @PostConstruct
+    private void initializeRoles(){
+        this.USER_ROLES = Arrays.stream(UserRoles.values())
+                .map(r -> keycloak.realm(keycloakConfig.getRealm()).roles().get(r.name()).toRepresentation())
+                .toList();
     }
 }

@@ -1,11 +1,9 @@
 package com.ekomodatech.festivanow.users.service;
 
 import com.ekomodatech.festivanow.users.config.keycloak.KeycloakConfig;
-import com.ekomodatech.festivanow.users.model.request.UpdatePasswordRequest;
 import com.ekomodatech.festivanow.users.model.entity.User;
 import com.ekomodatech.festivanow.users.model.entity.UserRoles;
-import com.ekomodatech.festivanow.users.model.dto.UserDTO;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ekomodatech.festivanow.users.model.request.UpdatePasswordRequest;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -21,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -33,8 +30,7 @@ public class UserService {
     @Autowired
     private KeycloakConfig keycloakConfig;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+
 
     public void addUser(@NonNull User user){
 
@@ -101,12 +97,5 @@ public class UserService {
                 .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Username not EXIST"));
 
         return keycloak.realm(keycloakConfig.getRealm()).users().get(user.getId());
-    }
-
-    public Iterable<UserDTO> getAllUsers() {
-        val users = keycloak.realm(keycloakConfig.getRealm()).users().list();
-        return users.stream()
-                .map(userR -> objectMapper.convertValue(userR, UserDTO.class))
-                .collect(Collectors.toSet());
     }
 }

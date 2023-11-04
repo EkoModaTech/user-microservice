@@ -1,14 +1,12 @@
 package com.ekomodatech.festivanow.users.controller;
 
-import com.ekomodatech.festivanow.users.model.request.UpdatePasswordRequest;
 import com.ekomodatech.festivanow.users.model.entity.User;
-import com.ekomodatech.festivanow.users.model.dto.UserDTO;
+import com.ekomodatech.festivanow.users.model.request.UpdatePasswordRequest;
 import com.ekomodatech.festivanow.users.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
@@ -24,11 +22,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public Iterable<UserDTO> getAll(){
-        return userService.getAllUsers();
-    }
 
     @PostMapping
     @ResponseBody public ResponseEntity<String> addUser(@Valid @RequestBody User user){
