@@ -1,8 +1,8 @@
 package com.ekomodatech.festivanow.users.service;
 
 import com.ekomodatech.festivanow.users.config.oidc.OIDCConfig;
-import com.ekomodatech.festivanow.users.entity.LoginRequest;
-import com.ekomodatech.festivanow.users.entity.RefreshTokenRequest;
+import com.ekomodatech.festivanow.users.model.request.LoginRequest;
+import com.ekomodatech.festivanow.users.model.request.RefreshTokenRequest;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;

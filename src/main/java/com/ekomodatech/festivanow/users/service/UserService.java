@@ -1,14 +1,15 @@
 package com.ekomodatech.festivanow.users.service;
 
 import com.ekomodatech.festivanow.users.config.keycloak.KeycloakConfig;
-import com.ekomodatech.festivanow.users.entity.UpdatePasswordRequest;
-import com.ekomodatech.festivanow.users.entity.User;
-import com.ekomodatech.festivanow.users.entity.UserRoles;
+import com.ekomodatech.festivanow.users.model.entity.User;
+import com.ekomodatech.festivanow.users.model.entity.UserRoles;
+import com.ekomodatech.festivanow.users.model.request.UpdatePasswordRequest;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ public class UserService {
 
     @Autowired
     private KeycloakConfig keycloakConfig;
+
+
 
     public void addUser(@NonNull User user){
 
@@ -85,5 +88,14 @@ public class UserService {
         val realmRole = realm.roles().get(role.name()).toRepresentation();
         val user = realm.users().get(userId);
         user.roles().realmLevel().add(List.of(realmRole));
+    }
+
+    protected UserResource getUserByUsername(String username){
+        val user = keycloak.realm(keycloakConfig.getRealm()).users().list().stream()
+                .filter(u -> u.getUsername().equals(username))
+                .findFirst()
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Username not EXIST"));
+
+        return keycloak.realm(keycloakConfig.getRealm()).users().get(user.getId());
     }
 }

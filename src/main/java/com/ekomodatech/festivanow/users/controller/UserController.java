@@ -1,7 +1,7 @@
 package com.ekomodatech.festivanow.users.controller;
 
-import com.ekomodatech.festivanow.users.entity.UpdatePasswordRequest;
-import com.ekomodatech.festivanow.users.entity.User;
+import com.ekomodatech.festivanow.users.model.entity.User;
+import com.ekomodatech.festivanow.users.model.request.UpdatePasswordRequest;
 import com.ekomodatech.festivanow.users.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,7 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
 
     @PostMapping
     @ResponseBody public ResponseEntity<String> addUser(@Valid @RequestBody User user){

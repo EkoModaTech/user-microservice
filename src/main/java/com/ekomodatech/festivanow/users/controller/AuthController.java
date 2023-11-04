@@ -1,7 +1,7 @@
 package com.ekomodatech.festivanow.users.controller;
 
-import com.ekomodatech.festivanow.users.entity.LoginRequest;
-import com.ekomodatech.festivanow.users.entity.RefreshTokenRequest;
+import com.ekomodatech.festivanow.users.model.request.LoginRequest;
+import com.ekomodatech.festivanow.users.model.request.RefreshTokenRequest;
 import com.ekomodatech.festivanow.users.service.OIDCService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
